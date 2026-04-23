@@ -65,11 +65,44 @@ sudo ./engine supervisor ./rootfs-base
 ```
 sudo ./engine start alpha ./rootfs-alpha /cpu_hog 90 --soft-mib 48 --hard-mib 80
 sudo ./engine start beta ./rootfs-beta /cpu_hog 90 --soft-mib 64 --hard-mib 96
-sudo ./engine run mountcheck ./rootfs-alpha /bin/sh -c "mount | grep proc"
-sudo ./engine ps
-sudo ./engine logs alpha
-sudo ./engine stop alpha
 ```
+- Run the commands to observe how the CLI works
+```
+sudo ./engine run mountcheck ./rootfs-alpha /bin/sh -c "mount | grep proc"
+sudo ./engine ps   # List tracked containers
+sudo ./engine logs alpha # Inspect one container
+sudo ./engine stop alpha # Stop containers
+```
+- Inspect the Bounded Buffer logging
+```
+sudo ./engine logs alpha
+# Also inspect the supervisor terminal to understand the producer consumer interaction
+```
+- Run memory test inside a container
+```
+cp -a ./rootfs-base ./rootfs-mem && cp memory_hog ./rootfs-mem/
+sudo ./engine start memtest ./rootfs-mem /memory_hog 8 500 --soft-mib 16 --hard-mib 32
+sleep 6
+sudo ./engine ps | grep memtest
+sudo dmesg -w | grep container_monitor    # Run in a new terminal
+```
+- Run scheduling experiment workloads
+```
+cp -a ./rootfs-base ./rootfs-hog15 && cp cpu_hog ./rootfs-hog15/
+sudo ./engine start hog0  ./rootfs-alpha  /cpu_hog 30
+sudo ./engine start hog15 ./rootfs-hog15 /cpu_hog 30 --nice 15
+wc -l logs/hog0.log logs/hog15.log
+```
+- Cleanup commands
+```
+sudo ./engine stop beta #Stop any container which is running
+Press Ctrl+C in the supervisor terminal
+ps aux | grep defunct #Verify that no zombie processes exist
+sudo dmesg | tail -20 #Inspect final kernel log
+sudo rmmod monitor #Unload the kernel module
+ls /tmp/mini_runtime.sock #Verify that the socket file is cleaned up
+```
+
 
 # Demo with Screenshots
 
