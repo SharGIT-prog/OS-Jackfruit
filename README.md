@@ -324,7 +324,7 @@ Signal Delivery
 - SIGCHLD is delivered to the supervisor's main thread, as it is the only thread
     which runs the accept loop.
 - SA_RESTART causes interrupted syscalls to restart automatically
-- The handler itself is async-signal-safe — it only calls waitpid(),
+- The handler itself is async-signal-safe - it only calls waitpid(),
     pthread_mutex_lock(), and basic comparisons
 - SIGCHLD is handled implicitely using the SIG_IGN flag, which is
     automatically reaped by the kernel.
@@ -459,7 +459,7 @@ Reliability
 
 Access to mm internals
 
-- get_mm_rss(mm) reads mm->rss_stat — a kernel-internal data structure.
+- get_mm_rss(mm) reads mm->rss_stat - a kernel-internal data structure.
 Userspace can approximate RSS via /proc/[pid]/status or /proc/[pid]/statm,
 but this requires opening and parsing files for each container on every check,
 which is expensive and can lead to race conditions.
