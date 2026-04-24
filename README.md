@@ -96,11 +96,13 @@ wc -l logs/hog0.log logs/hog15.log
 - Cleanup commands
 ```
 sudo ./engine stop beta #Stop any container which is running
+```
 Press Ctrl+C in the supervisor terminal
-ps aux | grep defunct #Verify that no zombie processes exist
-sudo dmesg | tail -20 #Inspect final kernel log
-sudo rmmod monitor #Unload the kernel module
-ls /tmp/mini_runtime.sock #Verify that the socket file is cleaned up
+```
+ps aux | grep defunct                            # Verify that no zombie processes exist
+sudo dmesg | tail -20                            # Inspect final kernel log
+sudo rmmod monitor                               # Unload the kernel module
+ls /tmp/mini_runtime.sock                        # Verify that the socket file is cleaned up
 ```
 
 
